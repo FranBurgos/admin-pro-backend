@@ -6,27 +6,25 @@ const MedicoSchema = Schema ({
         type: String,
         require: true
     },
-    email: {
-        type: String,
-        require: true,
-        unique: true
-    },
-    password: {
-        type: String,
-        require: true
-    },
     img: {
         type: String
     },
-    role: {
-        type: String,
+    usuario: {
         require: true,
-        default: 'USER_ROLE'
+        type: Schema.Types.ObjectId,
+        ref: 'Usuario'
     },
-    google: {
-        type: Boolean,
-        default: false
-    },
+    hospital: {
+        require: true,
+        type: Schema.Types.ObjectId,
+        ref: 'Hospital'
+    }
+});
+
+MedicoSchema.method('toJSON', function() {
+    const { __v, ...object } = this.toObject();
+    
+    return object;
 })
 
 module.exports = model('Medico', MedicoSchema);
