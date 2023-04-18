@@ -42,39 +42,29 @@ const crearHospital = async (req, res = response) => {
 
 const actualizarHospital = async(req, res = response) => {
     
-    // TODO validar token
-
-    //const uid = req.params.id;
+    const id = req.params.id;
 
     try{
 
-        // const usuarioDB = await Usuario.findById(uid);
+        const hospital = await Hospital.findById(id);
 
-        // if(!usuarioDB){
-        //     return res.status(404).json({
-        //         ok: false,
-        //         msg: 'No existe un usuario con ese id.'
-        //     })
-        // }
+        if (!hospital){
+            res.status(404).json({
+                ok: false,
+                msg: 'El hospital no existe.'
+            })
+        }
 
-        // // Actualización
-        // const { password, google, email, ...campos } = req.body;
-
-        // if ( usuarioDB.email != email ){
-        //     const existeEmail = await Usuario.findOne({email});
-        //     if (existeEmail) {
-        //         return res.status(404).json({
-        //             ok: false,
-        //             msg: 'Ya existe un usuario con ese email.'
-        //         })
-        //     }
-        // }
-
-        // campos.email = email;
-        // const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, {new: true});
-
+        const cambiosHospital = {
+            ...req.body,
+            usuario: uid
+        }
+        
+        const hospitalActualizado = await Hospital.findByIdAndUpdate(id, cambiosHospital, { new: true});
+        
         res.json({
             ok: true,
+            hospitalActualizado
         });
 
     }catch(error){
@@ -86,20 +76,21 @@ const actualizarHospital = async(req, res = response) => {
     }
 }
 
-const borrarHospital = async (req, res = response) => {
-    //const uid = req.params.id;
+const eliminarHospital = async (req, res = response) => {
 
     try{
-        // const usuarioDB = await Usuario.findById(uid);
+        const id = req.params.id;
 
-        // if(!usuarioDB){
-        //     return res.status(404).json({
-        //         ok: false,
-        //         msg: 'No existe un usuario con ese id.'
-        //     })
-        // }
+        const hospital = await Hospital.findById(id);
 
-        // await Usuario.findByIdAndDelete(uid);
+        if (!hospital){
+            res.status(404).json({
+                ok: false,
+                msg: 'El hospital no existe.'
+            })
+        }
+
+        await Hospital.findByIdAndDelete(id);
 
         res.json({
             ok: true,
@@ -110,7 +101,7 @@ const borrarHospital = async (req, res = response) => {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'Error inesperado borrando usuario... revisar logs.'
+            msg: 'Error inesperado borrando hospital... revisar logs.'
         })
     }
 }
@@ -119,5 +110,5 @@ module.exports = {
     getHospitales,
     crearHospital,
     actualizarHospital,
-    borrarHospital,
+    eliminarHospital,
 }

@@ -43,43 +43,33 @@ const crearMedico = async (req, res = response) => {
 
 const actualizarMedico = async(req, res = response) => {
     
-    // TODO validar token
-
-    const uid = req.params.id;
+    const id = req.params.id;
+    const uid = req.params.uid;
 
     try{
 
-        // const usuarioDB = await Usuario.findById(uid);
+        const medico = await Medico.findById(id);
 
-        // if(!usuarioDB){
-        //     return res.status(404).json({
-        //         ok: false,
-        //         msg: 'No existe un usuario con ese id.'
-        //     })
-        // }
+        if (!medico){
+            res.status(404).json({
+                ok: false,
+                msg: 'El médico no existe.'
+            })
+        }
 
-        // // Actualización
-        // const { password, google, email, ...campos } = req.body;
-
-        // if ( usuarioDB.email != email ){
-        //     const existeEmail = await Usuario.findOne({email});
-        //     if (existeEmail) {
-        //         return res.status(404).json({
-        //             ok: false,
-        //             msg: 'Ya existe un usuario con ese email.'
-        //         })
-        //     }
-        // }
-
-        // campos.email = email;
-        // const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, {new: true});
-
+        const cambiosMedico = {
+            ...req.body,
+            usuario: uid
+        }
+        
+        const medicoActualizado = await Medico.findByIdAndUpdate(id, cambiosMedico, { new: true});
+        
         res.json({
             ok: true,
-            usuario: usuarioActualizado
+            medicoActualizado
         });
 
-    }catch(error){
+    } catch(error) {
         console.log(error);
         res.status(500).json({
             ok: false,
@@ -89,23 +79,23 @@ const actualizarMedico = async(req, res = response) => {
 }
 
 const borrarMedico = async (req, res = response) => {
-    const uid = req.params.id;
+    const id = req.params.id;
 
     try{
-        // const usuarioDB = await Usuario.findById(uid);
+        const medico = await Medico.findById(id);
 
-        // if(!usuarioDB){
-        //     return res.status(404).json({
-        //         ok: false,
-        //         msg: 'No existe un usuario con ese id.'
-        //     })
-        // }
+        if (!medico){
+            res.status(404).json({
+                ok: false,
+                msg: 'El médico no existe.'
+            })
+        }
 
-        // await Usuario.findByIdAndDelete(uid);
+        await Medico.findByIdAndDelete(id);
 
         res.json({
             ok: true,
-            msg: 'Usuario eliminado'
+            msg: 'Médico eliminado'
         })
 
     } catch (error){
